@@ -1,0 +1,171 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MNIST CNN with TensorFlow.js</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@latest"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .column {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            padding: 8px 16px;
+            background: #007cba;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .file-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .preview-container {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .preview-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .preview-canvas {
+            border: 1px solid #ddd;
+            image-rendering: pixelated;
+        }
+        
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+        
+        .metrics {
+            margin-top: 20px;
+        }
+        
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>MNIST CNN Training with TensorFlow.js</h1>
+    
+    <div class="container">
+        <!-- Left Column: Controls and Data Management -->
+        <div class="column">
+            <h2>Data & Model Management</h2>
+            
+            <div class="file-inputs">
+                <div>
+                    <label>Upload Train CSV: </label>
+                    <input type="file" id="trainFile" accept=".csv">
+                </div>
+                <div>
+                    <label>Upload Test CSV: </label>
+                    <input type="file" id="testFile" accept=".csv">
+                </div>
+                <div>
+                    <label>Load Model JSON: </label>
+                    <input type="file" id="modelJsonFile" accept=".json">
+                </div>
+                <div>
+                    <label>Load Model Weights: </label>
+                    <input type="file" id="modelWeightsFile" accept=".bin">
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button id="loadDataBtn">Load Data</button>
+                <button id="trainBtn" disabled>Train</button>
+                <button id="evaluateBtn" disabled>Evaluate</button>
+                <button id="testFiveBtn" disabled>Test 5 Random</button>
+                <button id="saveModelBtn" disabled>Save Model</button>
+                <button id="loadModelBtn" disabled>Load Model</button>
+                <button id="resetBtn">Reset</button>
+                <button id="toggleVisorBtn">Toggle Visor</button>
+            </div>
+            
+            <div id="dataStatus" class="status">
+                No data loaded. Please upload CSV files and click "Load Data".
+            </div>
+            
+            <div id="trainingLogs" class="status">
+                Training logs will appear here...
+            </div>
+            
+            <div id="modelInfo" class="status">
+                No model loaded. Train a new model or load an existing one.
+            </div>
+        </div>
+        
+        <!-- Right Column: Results and Visualizations -->
+        <div class="column">
+            <h2>Results & Preview</h2>
+            
+            <div id="metrics" class="metrics">
+                <h3>Model Metrics</h3>
+                <div id="accuracyDisplay">Overall Accuracy: -</div>
+                <div id="trainingTime">Training Time: -</div>
+            </div>
+            
+            <h3>Random Test Preview</h3>
+            <div id="previewStrip" class="preview-container">
+                <!-- 5 canvas elements will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="data-loader.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
